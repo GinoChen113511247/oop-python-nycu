@@ -12,7 +12,7 @@ def test_fraction():
     a = Fraction(1, 4)
     b = Fraction(3, 4)
     c = a + b
-    assert str(c) == "16/16"
+    assert str(c) == "1"
     assert float(c) == pytest.approx(1.0)
     assert float(b.inverse()) == pytest.approx(4/3)
     with pytest.raises(AssertionError):
@@ -25,8 +25,8 @@ def test_intSet():
     s.insert(4)
     s.insert(3)
     assert str(s) == "{3,4}"
-    assert s.member(3)
-    assert not s.member(5)
+    assert s.membercheck(3)
+    assert not s.membercheck(5)
     s.insert(6)
     assert str(s) == "{3,4,6}"
     s.remove(3)

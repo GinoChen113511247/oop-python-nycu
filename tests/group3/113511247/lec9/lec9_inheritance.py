@@ -157,43 +157,49 @@ class Rabbit(Animal):
         # compare the ids of self and other's parents
         # don't care about the order of the parents
         # the backslash tells python I want to break up my line
-        parents_same = self.parent1.r_id == other.parent1.r_id \
+        if self is other:
+            return True
+        elif (self.parent1 is None or self.parent2 is None
+            or other.parent1 is None or other.parent2 is None):
+            return False
+        else:
+            parents_same = self.parent1.r_id== other.parent1.r_id \
                        and self.parent2.r_id == other.parent2.r_id
-        parents_opposite = self.parent2.r_id == other.parent1.r_id \
+            parents_opposite = self.parent2.r_id == other.parent1.r_id \
                            and self.parent1.r_id == other.parent2.r_id
-        return parents_same or parents_opposite
+            return parents_same or parents_opposite
     def __str__(self):
         return "rabbit:"+ self.get_r_id()
 
-print("\n---- rabbit tests ----")
-print("---- testing creating rabbits ----")
+#print("\n---- rabbit tests ----")
+#print("---- testing creating rabbits ----")
 r1 = Rabbit(3)
 r2 = Rabbit(4)
 r3 = Rabbit(5)
-print("r1:", r1)
-print("r2:", r2)
-print("r3:", r3)
-print("r1 parent1:", r1.get_parent1())
-print("r1 parent2:", r1.get_parent2())
+#print("r1:", r1)
+#print("r2:", r2)
+#print("r3:", r3)
+#print("r1 parent1:", r1.get_parent1())
+#print("r1 parent2:", r1.get_parent2())
 
-print("---- testing rabbit addition ----")
+#print("---- testing rabbit addition ----")
 r4 = Rabbit.__repro__(r1, r2)   # r1.__repro__(r2)
-print("r1:", r1)
-print("r2:", r2)
-print("r4:", r4)
-print("r4 parent1:", r4.get_parent1())
-print("r4 parent2:", r4.get_parent2())
+#print("r1:", r1)
+#print("r2:", r2)
+#print("r4:", r4)
+#print("r4 parent1:", r4.get_parent1())
+#print("r4 parent2:", r4.get_parent2())
 
-print("---- testing rabbit equality ----")
+#print("---- testing rabbit equality ----")
 r5 = Rabbit.__repro__(r3, r4)   # r1.__repro__(r3)
 r6 = Rabbit.__repro__(r4, r3)   # r1.__repro__(r2)
-print("r3:", r3)
-print("r4:", r4)
-print("r5:", r5)
-print("r6:", r6)
-print("r5 parent1:", r5.get_parent1())
-print("r5 parent2:", r5.get_parent2())
-print("r6 parent1:", r6.get_parent1())
-print("r6 parent2:", r6.get_parent2())
-print("r5 and r6 have same parents?", r5 == r6)
-print("r4 and r6 have same parents?", r4 == r6)
+#print("r3:", r3)
+#print("r4:", r4)
+#print("r5:", r5)
+#print("r6:", r6)
+#print("r5 parent1:", r5.get_parent1())
+#print("r5 parent2:", r5.get_parent2())
+#print("r6 parent1:", r6.get_parent1())
+#print("r6 parent2:", r6.get_parent2())
+#print("r5 and r6 have same parents?", r5 == r6)
+#print("r4 and r6 have same parents?", r4 == r6)

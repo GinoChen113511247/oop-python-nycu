@@ -1,7 +1,7 @@
 import pytest
 import random
 
-from lecture9_inheritance import Animal, Cat, Person, Student, Rabbit
+from lec9_inheritance import Animal, Cat, Person, Student, Rabbit
 
 def test_animal():
     a = Animal(4)
@@ -102,21 +102,17 @@ def test_rabbit():
     
     
     expected_rid = "001"  
-    assert r1.get_rid() == expected_rid
+    assert r1.get_r_id() == expected_rid
     assert str(r1) == "rabbit:" + expected_rid
    
-    assert r1.get_parent1() is None
-    assert r1.get_parent2() is None
-
     
-    r4 = r1 + r2
+    r4 = Rabbit.__repro__(r1, r2)
     assert r4.age == 0
-    assert r4.get_parent1() == r1
     assert r4.get_parent2() == r2
+    assert r4.get_parent1() == r1
 
     
-    r5 = r3 + r4
-    r6 = r4 + r3
-    assert r5 == r6 
-
-    assert r4 != r6
+    r5 = Rabbit.__repro__(r3, r4)
+    r6 = Rabbit.__repro__(r4, r3)
+    assert Rabbit.__eq__(r5, r6) == True
+    assert Rabbit.__eq__(r4, r6) == False

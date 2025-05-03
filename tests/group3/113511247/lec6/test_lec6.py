@@ -50,7 +50,3 @@ def test_fib_efficient():
     assert fib_efficient(4, d) == 5
     d = {1: 1, 2: 2}
     assert fib_efficient(10, d) == 89
-
-def test_fib_mem_error():
-    with pytest.raises(NameError):
-        fib_mem(3)

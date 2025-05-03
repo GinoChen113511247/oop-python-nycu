@@ -17,6 +17,7 @@ def run_sim(goal, num_trials, txt):
     est_probability = round(total/num_trials, 8)
     print('Estimated Probability of', txt, '=',
           round(est_probability, 8))
+    return est_probability
 
 def same_date(num_people, num_same):
     # guess there will be at least num_same people with the same birthday

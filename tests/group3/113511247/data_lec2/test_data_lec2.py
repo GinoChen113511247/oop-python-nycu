@@ -1,6 +1,6 @@
 import random
 import pytest
-from knapsack import Food, Menu, greedy, max_val, fast_max_val
+from menu import Food, Menu, greedy, max_val, fast_max_val
 
 def test_food():
     f = Food("apple", 10, 5)

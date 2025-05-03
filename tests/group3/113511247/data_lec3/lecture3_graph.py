@@ -36,8 +36,7 @@ class Digraph:
     def add_node(self, node):
         if node in self.edges:
             raise ValueError('Duplicate node')
-        else:
-            self.edges[node] = []
+        self.edges[node] = []
 
     def add_edge(self, edge):
         src = edge.get_source()
@@ -63,45 +62,46 @@ class Digraph:
         for src in self.edges:
             for dest in self.edges[src]:
                 result += src.get_name() + '->' + dest.get_name() + '\n'
-        return result[:-1]  # Omit final newline
+        return result[:-1] if result else ''
 
 
 class Graph(Digraph):
-    """Represents a graph as a dictionary of nodes mapping"""
+    """Represents an undirected graph."""
     def add_edge(self, edge):
-        Digraph.add_edge(self, edge)
+        super().add_edge(edge)
         rev = Edge(edge.get_destination(), edge.get_source())
-        Digraph.add_edge(self, rev)
+        super().add_edge(rev)
 
-class CityPlanner():
 
+class CityPlanner:
     def __init__(self):
         self.print_queue = True
-        self.g = []
+        self.g = None
 
     def print_path(self, path):
-        """Assumes path is a list of nodes"""
+        """Assumes path is a list of nodes."""
         result = ''
-        for i in range(len(path)):
-            result += str(path[i])
+        for i, node in enumerate(path):
+            result += str(node)
             if i != len(path) - 1:
                 result += '->'
         return result
 
     def DFS(self, graph, start, end, path, shortest, to_print=False):
         """Assumes graph is a Digraph; start and end are nodes;
-           path and shortest are lists of nodes
-           Returns a shortest path from start to end in graph"""
+           path and shortest are lists of nodes.
+           Returns a shortest path from start to end in graph."""
+        if not graph.has_node(start) or not graph.has_node(end):
+            return None
         path = path + [start]
         if to_print:
             print('Current DFS path:', self.print_path(path))
         if start == end:
             return path
         for node in graph.children_of(start):
-            if node not in path:  # avoid cycles
+            if node not in path:
                 if shortest is None or len(path) < len(shortest):
-                    new_path = self.DFS(graph, node, end, path, shortest,
-                                    to_print)
+                    new_path = self.DFS(graph, node, end, path, shortest, to_print)
                     if new_path is not None:
                         shortest = new_path
             elif to_print:
@@ -109,16 +109,17 @@ class CityPlanner():
         return shortest
 
     def BFS(self, graph, start, end, to_print=False):
-        """Assumes graph is a Digraph; start and end are nodes
-           Returns a shortest path from start to end in graph"""
+        """Assumes graph is a Digraph; start and end are nodes.
+           Returns a shortest path from start to end in graph."""
+        if not graph.has_node(start) or not graph.has_node(end):
+            return None
         init_path = [start]
         path_queue = [init_path]
-        while len(path_queue) != 0:
-            # Get and remove oldest element in path_queue
+        while path_queue:
             if to_print:
                 print('Queue:', len(path_queue))
                 for p in path_queue:
-                    print(print_path(p))
+                    print(self.print_path(p))
             tmp_path = path_queue.pop(0)
             if to_print:
                 print('Current BFS path:', self.print_path(tmp_path))
@@ -132,26 +133,46 @@ class CityPlanner():
                     path_queue.append(new_path)
         return None
 
-    def shortest_path_bfs(self, graph, start, end, toPrint = False):
-        """Assumes graph is a Digraph; start and end are nodes
-           Returns a shortest path from start to end in graph"""
-        return self.BFS(graph, start, end, toPrint)
-
-
-    def shortest_path_dfs(self, graph, start, end, toPrint = False):
-        """Assumes graph is a Digraph; start and end are nodes
-           Returns a shortest path from start to end in graph"""
+    def shortest_path_dfs(self, graph, start, end, toPrint=False):
+        """Returns shortest path using DFS."""
         return self.DFS(graph, start, end, [], None, toPrint)
 
+    def shortest_path_bfs(self, graph, start, end, toPrint=False):
+        """Returns shortest path using BFS."""
+        return self.BFS(graph, start, end, toPrint)
 
     def get_shortest_path(self, source, destination, method='dfs'):
-        sp = self.shortest_path_dfs(self.g,
-                           self.g.get_node(source),
-                           self.g.get_node(destination),
-                           True)
-        if sp is not None:
-            print('Shortest path from', source, 'to',
-                  destination, 'is', self.print_path(sp))
+        """Prints the shortest path from source to destination."""
+        if not self.g or not isinstance(self.g, Digraph):
+            return
+        if method == 'bfs':
+            sp = self.shortest_path_bfs(self.g, self.g.get_node(source), self.g.get_node(destination), True)
         else:
-            print('There is no path from', source, 'to', destination)
+            sp = self.shortest_path_dfs(self.g, self.g.get_node(source), self.g.get_node(destination), True)
+        if sp is not None:
+            print('Shortest path from', source, 'to', destination, 'is', self.print_path(sp))
+        else:
+            print(f'There is no path from {source} to {destination}')
 
+# Module-level functions for tests
+
+def printPath(path):
+    """Assumes path is a list of nodes."""
+    result = ''
+    for i, node in enumerate(path):
+        result += str(node)
+        if i != len(path) - 1:
+            result += '->'
+    return result
+
+
+def BFS(graph, start, end, toPrint=False):
+    """Module-level BFS"""
+    cp = CityPlanner()
+    return cp.BFS(graph, start, end, toPrint)
+
+
+def shortestPath(graph, start, end, toPrint=False):
+    """Module-level shortest path (DFS)"""
+    cp = CityPlanner()
+    return cp.shortest_path_dfs(graph, start, end, toPrint)

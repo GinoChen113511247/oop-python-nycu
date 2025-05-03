@@ -1,5 +1,7 @@
 import pytest
-from lecture3_graph import *
+from lecture3_graph import CityPlanner, Digraph, Node, Edge
+from lecture3_graph import shortestPath, BFS, printPath
+from lecture3_graph import Graph
 
 class TestDigraph:
     def setup_method(self):

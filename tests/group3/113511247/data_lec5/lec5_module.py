@@ -1,5 +1,7 @@
 import random
 import pylab
+import matplotlib.pylab as pylab
+
 
 # set line width
 pylab.rcParams['lines.linewidth'] = 4
@@ -77,9 +79,9 @@ class Drunk:
         self.name = name
 
     def __str__(self):
-        if self is not None:
-            return self.name
-        return 'Anonymous'
+        if self.name is None or self.name == "":
+            return "Anonymous"
+        return self.name
 
 class UsualDrunk(Drunk):
     def take_step(self):
